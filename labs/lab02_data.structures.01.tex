@@ -1,0 +1,346 @@
+\documentclass[10pt, a4paper, twosize]{article}
+%\documentclass[12pt, a4paper, twoside]{book}
+
+\usepackage{helvet}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage[
+	a4paper,
+	outer=2cm,
+	inner=4cm,
+	top=2cm,
+	bottom=2cm
+]{geometry}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage[disable]{todonotes}
+\usepackage{color, soul}
+\usepackage{amsmath}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{framed}
+\usepackage{subcaption}
+\usepackage{titlepic}
+\usepackage{fancyhdr}
+\usepackage[simplified]{styles/pgf-umlcd}
+\usepackage{shorttoc}
+\usepackage{url}
+\usepackage{paralist}
+
+\definecolor{grey}{rgb}{0.9, 0.9, 0.9}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{dkred}{rgb}{0.6,0,0.0}
+
+\lstdefinestyle{DOS}
+{
+    backgroundcolor=\color{black},
+    basicstyle=\scriptsize\color{white}\ttfamily,
+    stringstyle=\color{white},
+    keywords={}
+}
+
+\lstdefinestyle{makefile}
+{
+    numberblanklines=false,
+    language=make,
+    tabsize=4,
+    keywordstyle=\color{red},
+    identifierstyle= %plain identifiers for make
+}
+
+\lstset{
+  language=Java,                % the language of the code
+  basicstyle=\footnotesize\ttfamily,
+  numbers=left,                   % where to put the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\color{dkred},         % string literal style
+  columns=fixed,
+  extendedchars=true,
+  frame=single,
+}
+
+%\renewcommand{\chaptername}{Topic}
+
+% New definitions
+\algnewcommand\algorithmicswitch{\textbf{switch}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+\algnewcommand\algorithmicassert{\texttt{assert}}
+\algnewcommand\Assert[1]{\State \algorithmicassert(#1)}%
+% New "environments"
+\algdef{SE}[SWITCH]{Switch}{EndSwitch}[1]{\algorithmicswitch\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicswitch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ #1}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndSwitch}%
+\algtext*{EndCase}%
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RO, LE]{\small \rightmark}
+\fancyfoot[RO, LE]{\small \thepage}
+
+\begin{document}
+
+%\frontmatter
+
+\begin{titlepage}
+\vspace*{5cm}
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/EdNapUniLogoCMYK}~\\[1cm]
+
+\textsc{\Large Edinburgh Napier University}\\[1.5cm]
+
+\textsc{\LARGE \bfseries SET08122 Algorithms \& Data Structures}\\[0.5cm]
+
+\hrulefill \\[0.4cm]
+{\huge \bfseries Lab 2 - Data Structures 01 \\[0.4cm] }
+\hrulefill \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\textbf{Dr Simon Wells} \\
+\end{flushleft}
+\end{minipage}
+
+\vfill
+
+\end{center}
+\end{titlepage}
+
+%\shorttoc{Overview}{0}
+
+%\setcounter{tocdepth}{2}
+%\cleardoublepage
+%\tableofcontents
+%\listoffigures
+%\listofalgorithms
+%\addtocontents{toc}{~\hfill\textbf{Page}\par}
+
+%\mainmatter
+
+%\input{sections/labs/04_ui}
+
+\section{Aims}
+\paragraph{} Our goal this week is to start building our tools and understanding of how data, datatypes, data structures, and algorithms relate to the use of memory and computation. We are going to do this from first principles, but also with a practical approach. So things might look as if they are moving slowly now, especially if you are an experience programmer, but that is just so that once we introduce the more complex aspects, there is a solid framework for understanding them.
+
+\paragraph{} The idea is that, as we introduce ourselves to more varied data structures over the coming weeks, and subsequently explore algorithms that interact with and manipulate them, we can get a feel for why one approach might use more or less memory, or taking more or less time to compute an answer. In real world programming we will not often perform a careful performance analysis from first principles. At most we might roughly time how long something takes, or check memory pressure. Ideally we will run our code through a profiling tool to identify where it is spending it's time. This gives us evidence for where to focus our efforts if the performance isn't acceptable, i.e. don't optimise the function that runs for 10\% of the time when our program spends 90\% of the time waiting for another function to complete. Often however, with experience we can often look at our own code and determine where, theoretically, our code is expending lots of effort. 
+
+\paragraph{} Over the next few sessions we are going to do some experiments that should lead to use both developing some simple informal techniques for gauging how complex a given algorithm is, whilst also developing our own tool for making physical measurements of our own code to give ourselves evidence of how it is performing. Basically we want to develop a couple of routes towards understanding time and space complexity of data structures and algorithms so that we can more easily handle what has traditionally been one of the more trickier aspects of programming.
+
+\paragraph{} At the end of the practical portion of this topic you will be able to:
+
+\begin{itemize}
+\item Determine the ``memory pressure'' of a given primitive datatype, array, or struct. Essentially measuring how much memory, a given primitive uses then extending this to handle arrays and structs so we can make best guess estimates, or even accurate measurements, of the RAM used.
+\item Measure how long a function takes to run and build a simple test harness to help us to record statistics about the performance of the code that we write (we'll use this over the next few weeks to support our investigations).
+\end{itemize}
+
+
+\begin{framed}
+{\bf{NOTICE:} Whilst, for the most part, you should select your preferred language to repeat the exercises in, it is difficult to carry out all tasks in all languages. Therefore you should be pragmatic, and if you have time it is advisable to work in several languages. This means that rather than a single example of a data structure, which will only give you part of the story, you can see how different implementations, in different languages, work. As a result you have more context in which to consider the theoretical structures themselves which are rarely entirely encapsulated within a single language.}  
+\end{framed}
+
+\paragraph{} If you are a confident or experienced programmer then you might have met all of these topics before. However others in the class may have had a different background or route to this class that did not include your experiences. We are starting off at a fairly basic level so that we all have the same foundation for constructing, understanding, and reasoning about more advanced data structures and the algorithms that manipulate them. Moreover, because data structures and algorithms, as a topic, can rapidly take a turn for the abstract and mathematical, it is worth building slowly but steadily towards the more complex topics. If we get that right, perhaps we can arrive at the complex stuff without even realising.
+
+\section{Structured Activities}
+
+\paragraph{} Data structures that we can use in a language are concrete implementations of abstract concepts. Often they are constructed using simpler, primitive data-types such as ints, floats, chars, and strings. 
+
+\subsection{Size of primitve datatypes}
+\paragraph{} First off, let's see how much space various primitive datatypes takes up. First, remind yourself of the kinds of primitive datatypes available in C. For each datatype, you should write a short C program that prints out the number of bytes used by that datatype. The following program should help you get started. Make sure to keep a note of the size of each data type.
+
+\begin{lstlisting}
+#include <stdio.h>
+
+int main()
+{
+    int integerVariable;
+    size_t size;
+
+    size = sizeof(integerVariable);
+    
+    printf("Size of Integer Variable is %zu bytes\n", size);
+
+    return 0;
+}
+\end{lstlisting}
+
+\paragraph{} You should go through your version of this program and add comments explaining what is happening in each line. This way you can convince yourself that you understand what is happening. I have perhaps laboured the point a little here to break each step out into single increments.
+
+\paragraph{} In the real world we might, more realistically, write a slightly more compact program like the following which does exactly the same by combining some of the intermediate steps:
+
+\begin{lstlisting}
+#include <stdio.h>
+
+int main()
+{
+    int integerVariable;
+
+    printf("Size of Integer Variable is %zu bytes\n", sizeof(integerVariable));
+
+    return 0;
+}
+\end{lstlisting}
+
+\paragraph{} Make sure to try multiple instances of the same datatype; you shouldn't see any difference in terms of the memory consumed by any given instance of a given primitive datatype. Repeat the exercise in your selected favourite language. You will likely find some differences in the kinds of primitve datatypes available and that perhaps the same primitive in different languages can use different amounts of memory.
+
+\paragraph{} We can use simple data types like these to store data in our programs. It is useful to have this hands on experience of getting the actual size of a variable so that we can provide evidence to ourselves of how much memory a given program is using. if we need to optimise a program, or, in some cases just get our data to fit into the available memory, then we need to know what options we have, and in the worst case, when our intuition fails us, we need to be able to make some measurements that provide evidence upon which to make our subsequent decisions.
+
+\subsection{Arrays}
+\paragraph{} One of the simpler data structures is the array, a contiguous sequence of memory locations each of which stores an element of data. This is a simple and performant data structure which we can use as the basis for many others\footnote{and will do so over the next few weeks}.
+
+\paragraph{} Some languages, Python for instance, don't support arrays in the same way that languages like C, C++, Java, \&c. do. In Python, if you want an array like collection of data you have the List, which addresses some of the drawbacks of the simple array, but at the expense of some performance. This is considered acceptable by many programmers, for the same reason that memory management and garbage collection is considered useful. By hiding low level details, Python can exclude many classes of related bugs\footnote{This is not to say that Python is perfect. Far from it. Just that it has advantages and disadvantages. The advantage of productivity is tempered by lower performance. However, to temper this, Python makes it easy to ``drop down'' to C or some other high performance languages when necessary. When you care about performance however, the rule of thumb, regardless of the language you are using is to: Write your code. Profile it. Then, if necessary, rewrite the slowest bits in a higher performance language (but often this is not necessary)}.
+
+\begin{enumerate}
+\item Write a C program that uses an array to store your grades for your first year modules. 
+\item You now want to make space for your second year modules. Modify your original program so that a newer bigger array is created and the orginal contents are copied into the new array with the new students matriculation number at the end. \emph{Don't just create a bigger array initially, the idea is to capture the notion that you don't know how big the array needs to be and you might need to extend it at runtime}. This is a useful exercise because it exposes some of the core issues with arrays and also some of the code that is necessary to implement more flexible structures. Remember that, under the covers, our code is ultimately limited by the physical architecure of computer systems, both generally in terms of the von Neumann architecture, but more specifically in terms of how memory is implemented and organised.
+\item Repeat this exercise in the language of your choice and consider any similarities or differences between the two solutions.
+\end{enumerate}
+
+\paragraph{} The scenario in the previous exercise exactly illustrates the most common drawback of arrays. Whilst they are fast and efficient they rely on you having prior knowledge of how much data must be stored in them. If at runtime you need to store more data then your program needs a mechanism for increasing the size of the array. With basic arrays, this means allocating a new array of the required size\footnote{or bigger to give yourself some head room, but what happens if you never use that space? Then you've allocated memory that neven gets used, which feel kind of wasteful.} then copying the existing data into the new array, then adding the new data at the end. This is a hugely expensive set of operations in terms of both memory and processor usage. It is to combat these kinds of scenario that various type of dynamic sequence have been developed which we'll explore in the next few sub-topics.
+
+\paragraph{} This all said, arrays are fantastically useful, fast, efficient, and simple data-structures. In some circumstances they are incredibly useful, e.g. if you want to represent a chess board then you might use an eight by eight, two-dimensional array to represent each square. You can use one and two dimensional arrays as the basic data-structures to store the cells in cellular automata or simulations of the game of life. You could even use a three dimensional array to store data for a toy simulation of minecraft\footnote{This would really be a ``toy'' implementation though. You would quickly want to look at enheancements like using sparse arrays, then other dynamic, non-contiguous, sparse datastructures to enable support for slightly bigger worlds. This quickly leads to a rabbit hole of windows and paging so that you can load as much of a world into RAM as necessary but have a far bigger world stored on the drive}. We will return to mentioning arrays later as they often underpin implementations of other data structures.
+
+\paragraph{} The important take away here is that implementations of programming languages are pragmatic endeavours. Language designers and implementors make practical decisions about how to implement various features, whether to avoid certain features, in the same way that Python avoids arrays but has Lists, trading off performance for expressive power, or conceptaual, syntactic, or semantic clarity. All languages however are slaves to two rules, they run on physical hardware, which means that there are limits tp performance, and they mostly implemented using other, lower level, languages\footnote{At least until the language is sufficiently compelte that it can be self hosted, i.e. the language is written and compiled in itself}.
+
+\paragraph{} Let's repeat the exercise from earlier, to see how much memory our arrays take up. Modify your program to print out the size of each array. The following program should help in applying the sizeof function to an array. Note that I've also included an example of how to programmatically determe how many elements can be stored in an array.
+
+\begin{lstlisting}
+#include <stdio.h>
+
+int main()
+{
+    int a[100];
+    size_t s = sizeof(a);
+    printf("%zu bytes\n", s);
+
+    size_t num = s/sizeof(int);
+    printf("space for storing %zu elements\n", num);
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Structs}
+\paragraph{} As well as arrays, we'll need other ways of groups primitive datatypes together to help us to build more flexible data structures. So, to round out this portion of the labs, let's turn our attention towards structures, or ``structs'' as they are known in C.
+
+\paragraph{} These are a way to encapsulate a collection of data so that they can be identified as a group using a single variable. For example
+
+\begin{lstlisting}
+#include <stdio.h>    
+
+typedef struct
+{
+  int id;
+  char name[30];  
+} employee;
+
+int main()
+{
+  employee e1 = {1, "Simon"};
+  printf("ID: %d\nName: %s\n", e1.id, e1.name);
+  return(0);
+}
+\end{lstlisting}
+
+\paragraph{} For completion, we can also discover how many bytes are used by our struct, both in total and in terms of the individual members of the struct:
+
+\begin{lstlisting}
+#include <stdio.h>    
+
+typedef struct
+{
+  int id;
+  char name[30];  
+} employee;
+
+int main()
+{
+  employee e1 = {1, "Simon"};
+  printf("ID: %d\nName: %s\n", e1.id, e1.name);
+  printf("%zu %zu %zu \n", sizeof(e1.id), sizeof(e1.name), sizeof(e1));
+  return(0);
+}
+\end{lstlisting}
+
+\paragraph{} Notice that the size of the individual members of our struct, once summed togeher are less than the implemented size of the struct. This is because the compiler strives to optimise our code when transforming it into an executable. In this case, the compiler adds some padding to the members of the struct in order to align them\footnote{If you're interested in finding out more about this then take a look at the Wikipedia page on \emph{Data Structure Alignment} first: \url{https://en.wikipedia.org/wiki/Data_structure_alignment} then for more depth, explore Eric S. Raymond's \emph{Lost Art of Structure Packing} from here: \url{http://www.catb.org/esr/structure-packing/}}.
+
+\subsection{Timing Things}
+\paragraph{} As well as examining how many bytes of memory any given data is consuming, we also will need a method to find out how long things take to run. For this we will write ourselves a small bit of boilerplate that lets us separate the code that we want to measure code from our surrounding measuring code.
+
+\begin{lstlisting}
+#include <time.h>
+#include <stdio.h>
+
+void code()
+{
+    for(int i=0; i<10000; i++)
+    {
+        printf(".");
+    }    
+    printf("\n");
+}
+
+int main()
+{
+    clock_t t;
+    printf("start: %d \n", (int) (t=clock()));
+
+    code();
+
+    printf("stop: %d \n", (int) (t=clock()-t));
+    printf("Elapsed: %f seconds\n", (double) t / CLOCKS_PER_SEC);
+
+    return 0;
+}
+\end{lstlisting}
+
+\paragraph{} Now we have two functions, a main loop in which we set up a variable to get the CPU clock ticks just before and just after a function runs. This function, named ``code()'' is where we will place our own code later, but for the moment we have a small loop that prints out full-stops before returning to the main function. The difference in clocks ticks is then printed to the screen. We can use this to measure how long our code takes to run. Try playing about with the functionality of the code() function. Investigate what happens in terms of execution time when you vary the number of iterations of the loop.
+
+\paragraph{} We are going to be using similar code in future labs to investigate the run-times of various algorithms that we develop so it is worth playing about with this code. As running the same code can take a different length of time each time you run it, it is worth running the code loop several times, then taking the average. It might even make our lives easier if we could turn this bit of code into a useful little test harness with a few additions:
+
+\begin{enumerate}
+\item Modify your boilerplate from above to run the code() function a set number of times then to calculate the average run-time for the function.
+\item Add some functionality to main() to print a nice report of the run-times and average. You might want to consider printing these out as comma separated values so that they are easy to import into a spreadsheet for further analysis.
+\item \emph{Challenge:} Extend the boilerplate to enable your program to take a command line argument specifying how many iterations to run of the code() function.
+\item \emph{Challenge:} Extend the boilerplate to write out the results of your experiment to a csv file so that it can be imported directly into a spreadsheet. You might even like to be able to specify the filename as an argument from the command line.
+\end{enumerate}
+
+
+
+\section{summary}
+\paragraph{} We have started by looking at some primitive datatypes from the C language. We've investigated how much memory these primitives use and have looked at some simple ways to aggregate data, as a simple collection, using \emph{Structs} and using the simple, sequential \emph{Array} data structure. From here we can start exploring some of the more iconic and well-studied, traditional data structures.
+
+\paragraph{} Data structures, particularly in their abstract sense, are design patterns that can help us to see how to approach a challenge or enable us to communicate our ideas to other developers. Because many data structures have been studied in their own right their behaviour and performance characteristics are often known, and particular implementations can be compared against other implementations or ideal behaviour. As such, it is very important, if you want to become a great programmer, to have a thorough grasp of at least the basic, and often, also, the more esoteric, data structures.
+
+\paragraph{} In order to secure that grasp, after looking at primitives, Structs, and Arrays, we've started to build our tool that will enable us to measure how long our code takes to run. We are going to use this to enable us to run our own experiments and get some insight into how our code performs.
+
+
+
+%\backmatter
+
+\bibliographystyle{plain}
+
+\bibliography{workbook}
+
+\end{document}
+
+
+%\begin{framed}
+%HELLO
+%\end{framed}
+
+
