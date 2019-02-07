@@ -95,7 +95,7 @@ int count(struct node * list)
     while(list != NULL)
     {
         list = list -> link;
-        count++;;
+        count++;
     }
     return count;
 }
