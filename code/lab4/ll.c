@@ -114,7 +114,7 @@ void delete(struct node ** list, int num)
                 *list = temp -> link;
             }
             else
-                old -> link = temp ->link;
+                old -> link = temp -> link;
                 free(temp);
                 return;
         }
