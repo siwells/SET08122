@@ -1,0 +1,322 @@
+\documentclass[10pt, a4paper, twosize]{article}
+%\documentclass[12pt, a4paper, twoside]{book}
+
+\usepackage{helvet}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage[
+	a4paper,
+	outer=2cm,
+	inner=4cm,
+	top=2cm,
+	bottom=2cm
+]{geometry}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage[disable]{todonotes}
+\usepackage{color, soul}
+\usepackage{amsmath}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{framed}
+\usepackage{subcaption}
+\usepackage{titlepic}
+\usepackage{fancyhdr}
+\usepackage[simplified]{styles/pgf-umlcd}
+\usepackage{shorttoc}
+\usepackage{url}
+\usepackage{paralist}
+
+\definecolor{grey}{rgb}{0.9, 0.9, 0.9}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{dkred}{rgb}{0.6,0,0.0}
+
+\lstdefinestyle{DOS}
+{
+    backgroundcolor=\color{black},
+    basicstyle=\scriptsize\color{white}\ttfamily,
+    stringstyle=\color{white},
+    keywords={}
+}
+
+\lstdefinestyle{makefile}
+{
+    numberblanklines=false,
+    language=make,
+    tabsize=4,
+    keywordstyle=\color{red},
+    identifierstyle= %plain identifiers for make
+}
+
+\lstset{
+  language=Java,                % the language of the code
+  basicstyle=\footnotesize\ttfamily,
+  numbers=left,                   % where to put the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\color{dkred},         % string literal style
+  columns=fixed,
+  extendedchars=true,
+  frame=single,
+}
+
+%\renewcommand{\chaptername}{Topic}
+
+% New definitions
+\algnewcommand\algorithmicswitch{\textbf{switch}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+\algnewcommand\algorithmicassert{\texttt{assert}}
+\algnewcommand\Assert[1]{\State \algorithmicassert(#1)}%
+% New "environments"
+\algdef{SE}[SWITCH]{Switch}{EndSwitch}[1]{\algorithmicswitch\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicswitch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ #1}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndSwitch}%
+\algtext*{EndCase}%
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RO, LE]{\small \rightmark}
+\fancyfoot[RO, LE]{\small \thepage}
+
+\begin{document}
+
+%\frontmatter
+
+\begin{titlepage}
+\vspace*{5cm}
+\begin{center}
+\includegraphics[width=.5\textwidth]{images/EdNapUniLogoCMYK}~\\[1cm]
+
+\textsc{\Large Edinburgh Napier University}\\[1.5cm]
+
+\textsc{\LARGE \bfseries SET09117 Algorithms \& Data Structures}\\[0.5cm]
+
+\hrulefill \\[0.4cm]
+{\huge \bfseries Lab 6 - Searching \\[0.4cm] }
+\hrulefill \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\textbf{Dr Simon Wells} \\
+\end{flushleft}
+\end{minipage}
+
+\vfill
+
+\end{center}
+\end{titlepage}
+
+%\shorttoc{Overview}{0}
+
+%\setcounter{tocdepth}{2}
+%\cleardoublepage
+%\tableofcontents
+%\listoffigures
+%\listofalgorithms
+%\addtocontents{toc}{~\hfill\textbf{Page}\par}
+
+%\mainmatter
+
+%\input{sections/labs/04_ui}
+
+\section{Aims}
+\paragraph{} At the end of the practical portion of this topic you will be able to:
+
+\begin{itemize}
+\item Implement a variety of basic search algorithms in a language of your choice.
+\item Implement a \emph{test harness} for your algorithms
+\item Create a plot of your algorithm's performance on datasets of various size
+\item Consider the factors that might affect the performance of an algorithm
+\item Understand the circumstances that lead to the best, worst, and average performance charateristics for your algorithms
+\end{itemize}
+
+
+\section{Activities}
+
+
+%\begin{framed}
+%{\bf{NOTICE:}} Each task is supplied with an indicative code framework. If you are using Java you can use this to get started. For all other languages you should adjust or rewrite the framework to suit your choice. It is meant merely to get you started.
+%\end{framed}
+
+
+\subsection{Implement a linear search algorithm}
+
+\paragraph{} The Linear search, also known as a sequential search, algorithm moves through your dataset, starting with the first element, and stepping through, examining one element at a time. At each step the element is compared to the search term (or key), if they match then the seach is complete as you've found your item, otherwise you must continue until you find a match or reach the end of your data.
+
+\paragraph{} This is the only kind of search that can be performed on unsorted data. If you don't know the order of your data, or your data has no order, then there is no alternative but to check every item to see if it is what you're looking for. In the worst case this means that you have to check every member of the collection before determining whether the item is or is not in the collection.
+
+\paragraph{} Think of finding a particular card in a deck of playing cards, the Queen of Hearts for instance. If the deck has been properly shuffled then, unless you are Ricky Jay\footnote{An awesome magician whose legerdemain was particularly amazing when doing card manipulation \url{https://en.wikipedia.org/wiki/Ricky_Jay}.} who could find a single card anywhere in a deck, you're probably going to have to do a linear search, check each card as rapidly as you can until your find your target. 
+
+\paragraph{} The Linear search \emph{algorithm} is as follows (given a collection of unsorted/unorered data and a search term or key):
+
+\begin{enumerate}
+\item Compare the key to the first element of data
+\item If key matches element then the search is successful
+\item If there are more elements of data: get the next element of data \& return to the previous step
+\item If there is no more data \& no matching key so search the the search is unsuccessful
+\end{enumerate}
+
+\paragraph{} We actually have already written linear searches many of the earlier labs, look back through your code for any function that you've written that takes a particular value to look for then tells you where it is in the collection. Make sure that you understand the process that we've followed and how our earlier code implements the algorithm above.
+
+\paragraph{} We are going to concentrate on seaching for values within arrays so that we can work with a simple and straightforward environment rather than applying our learning in lots of contexts. This will be useful over the next couple of weeks as we study various ways to sort data so that it can be searched more efficiently.
+
+\paragraph{} Our search function from the arrays parts of Lab 03 looked like this\footnote{Refresh your understanding by re-doing parts of that lab if necessary before proceeding}:
+
+\begin{lstlisting}
+void search(int* array, int num)
+{
+    int idx;
+    for(idx=0; idx<MAX; idx++)
+    {
+        if(array[idx] == num)
+        {
+            printf("%d found in position %d\n", num, idx+1);
+            return;
+        }
+    }
+    if(idx == MAX)
+        printf("%d not found in array\n", num);
+}
+\end{lstlisting}
+
+\paragraph{} Now retrieve your code from lab 02, the program you wrote to time things, You're going to use that code to investigate how linear search performs. It should look something like this\footnote{Although I did suggest some enhancements that you could make to make your own life easier at this point}:
+
+\begin{lstlisting}
+#include <time.h>
+#include <stdio.h>
+
+void code()
+{
+    for(int i=0; i<10000; i++)
+    {
+        printf(".");
+    }    
+    printf("\n");
+}
+
+int main()
+{
+    clock_t t;
+    printf("start: %d \n", (int) (t=clock()));
+
+    code();
+
+    printf("stop: %d \n", (int) (t=clock()-t));
+    printf("Elapsed: %f seconds\n", (double) t / CLOCKS_PER_SEC);
+
+    return 0;
+}
+\end{lstlisting}
+
+\paragraph{} Your first task is to implement an integer array in the main function, populate the array with random values, then run the linear search against it looking for a particular value. You'll have to call the linearsearch function from within \emph{code()} because we want to measure how long it takes. Repeat this a number of times, say 100, keeping track of the times, then work out the average time for the search. Now increase the size of your array and repeat the procedure the same number of times, keeping track of the timings and working out an average at the end. You can either do this manually, or else, get your program to automate this\footnote{As programmers this is exactly the kind of thing that we should be automating.}It's also worth keeping a count of the number of comparisons performed as this makes a nice proxy for absolute timings. Consider why each might be a useful value to have when doing analysis of the performance of an algorithm.
+
+\paragraph{} Now repeat this several more time, increasing the number of items in the collection at each repetition. You're welcome to see just how large you can make the array before your program chokes\footnote{Which might be interesting to do in it's own right.}. Finally, take the figures from your experiments and plot them to draw a chart. Excel, or any other spreadsheet is a useful tool for this\footnote{Those of you who do Python have no need of ever using a spreadsheet again, you just need to find the right Python libs for this particular type of analysis}. The x-axis should record the size of the collection, and the y-axis the time taken to search for a value. What do you notice about the shape of the plot? Does the search implementation behave as you'd expect it to? You might want to repeat the experiments twice, once doing a search where you are finding an element that does exist in the collection, and once where the element is not in the collection. Under what circumstance do you appear to get the best, worst, and average performances?
+
+\paragraph{} Consider repeating this same experiment using various of other data structures that we've constructed. This should given you an insight into the relative performance of a linear search across various data structures\footnote{Trees \& graphs have their own specialist construction, search, and traversal algorithms which we'll see in a few weeks so don't worry about them just yet}.
+
+
+
+\subsection{Implement a binary search algorithm}
+
+\paragraph{} This algorithm still has to do comparisons but is more efficient than a linear search because, after each comparison, half the search space is subsequently ignored. This greatly reduces the potential number of comparisons that need to be performed.
+
+If we return to our card deck again, but this time, if the card deck is brand new then the cards are ordered, first by suit, and within each suit from the two to the Ace. It is straightforward to cut the deck, decide whether the card at the cut is higher or lower in the ordering and decide which half of the remaining cards will contain our lady. We can repeat this until we are left holding the Queen of Hearts. This, in essence is the binary search. We rely on the data being ordered, so that we know roughly where to search. Even in the worst case scenario we would have to do many fewer comparison than for the linear search.<D-d>
+
+
+\paragraph{} The Binary search algorithm\footnote{If this description is insufficient then this is an opportunity to do some research for a description that works for you. Sometimes a different voice or use of words can make things more understandable} is as follows:
+
+\begin{enumerate}
+\item Compare search key to middle element of the data:
+\item If the middle element matches the search key then the search is successful \& complete
+\item If the middle element is $>$ search key then discard the larger half of the data \& return to step \#1
+
+\item If the middle element is $<$ search key then discard the smaller half of the data \& return to step \#1
+\item If no more data \& no matching key so search is unsuccessful \& complete
+\end{enumerate}
+
+\paragraph{} Let's look at an implementation of this algorithm:
+
+\begin{lstlisting}
+#include <stdio.h>
+
+#define SIZE 10
+int main(void)
+{
+    int arr[SIZE] = {1, 2, 3, 9, 11, 13, 17, 25, 57, 90};
+    int mid = 0, lower = 0, upper = SIZE-1, key = 0, found = 0;
+
+    printf("Enter number to search for: ");
+    scanf("%d", &key);
+
+    for(mid=(lower+upper)/2; lower <= upper; mid=(lower+upper)/2)
+    {
+        if(arr[mid] == key)
+        {
+            printf("Your number is at position %d of our array\n", mid);
+            found = 1;
+            break;
+        }
+        if(arr[mid] > key)
+            upper = mid-1;
+        else
+            lower = mid+1;
+    }
+    if(!found)
+        printf("%d is not in the array\n", key);
+        return 0;
+    return(0);
+}
+\end{lstlisting}
+
+\paragraph{} We've created and populated a small array with integer values that are in ascending numerical sorted order\footnote{In a real program we would either construct the array as a sorted collection or else run a sorting algorithm, but that is for next week, so, for now, let's assume that our array is magically sorted ready for us to search it}. We then ask our user for a number to look for. To look for it, we calculate the mid-point of the array, check the value, if it's correct then we can print a message and exit. Otherwise, we adjust our upper or lower bounds depending upon whether our search term is larger or smaller than the value at the mid point. We then repeat the search, examining the mid point of the remaining half of the array, and discarding the half that doesn't contain our search term. Eventually we shall either find our search term or else run out of numbers to check.
+
+\paragraph{} Repeat the experiment that you ran for the linear search, but now using the binary search. You will need to adjust our binary search program to work with our timing program. Plot the results on the same chart that has your linear search and compare the results. What do you notice? Which algorithm has the steepest curve? Why do you think this?
+
+\subsection{Challenge: Other Search Algorithms}
+
+\paragraph{} If you think you're happy with your understanding of the previous two search algorithms then you should research and consider the following (less common) search algorithms. Again they all rely on sorted data and behave with slightly different characteristics:
+
+\begin{itemize}
+\item Jump Search
+\item Interpolation Search
+\item Exponential Search
+\item Ternary Search
+\end{itemize}
+
+\paragraph{} Find a description of the algorithm for each, implement a method to use that search strategy on your array, then run the function in your timing program and plot the results.
+
+\paragraph{} The key point to take away is that the data can be as important as the algorithm when it comes to real world performance. If you know your data well, and have carefully considered whether your data fits the case, then you can, perhaps, get a slight edge in performance. 
+%\backmatter
+
+
+\subsection{Coursework}
+
+\paragraph{} Finally, if you're happy with your understanding of search algorithms then feel free to use the lab time to work on your coursework assignment.
+
+\bibliographystyle{plain}
+
+\bibliography{workbook}
+
+\end{document}
+
+
+%\begin{framed}
+%HELLO
+%\end{framed}
+
+
