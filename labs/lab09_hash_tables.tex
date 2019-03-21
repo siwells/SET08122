@@ -326,6 +326,8 @@ A user of our API can now free all of the heap allocated memory just by calling 
 
 The full listing for the \texttt{OAHashTable.c} file is shown at the end of this document.
 
+\textbf{Challenge:} add a remove function to your hash table. The trick with removing from open-addressed hash tables is that we cannot just overwrite a removed data item with NULL. This is because our search functions tops searching when it finds a position with NULL in it. But if we have removed an item, then the item that it is looking for may be in a cluster that continues after the NULL item, so we don't necessarily want to stop the search. When we remove an item, we should replace it with a special flag, and modify our search method to continue to the next probe if it lands on this flag. We can use a \texttt{DataElement} with a key of -1 and data of -1 for this purpose. Create a remove function (which takes in a hash table and a key as a parameter), and modify your search method to check for the flag.
+
 \section{Activity 1: Experimenting with your open-addressed hash table}
 Write a main method (in a file called \texttt{main.c}) to initialise a hash table of size 11. Insert the following keys, \emph{in order}, into your hash table (you can use random values for the data items as we are only interested in the distribution of keys for our performance analysis):
 
