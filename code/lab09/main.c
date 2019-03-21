@@ -23,6 +23,9 @@ int main()
     insert(hashTable,1, rand());
     insert(hashTable,12, rand());
     printKeys(hashTable);
+	search(hashTable, 6);
+	search(hashTable, 39);
+	search(hashTable, 100);
     printPerformance(hashTable);
     destroy(hashTable);
     return 0;
