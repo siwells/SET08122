@@ -197,7 +197,7 @@ struct DataItem* search(struct OAHashTable*, int);
 
 As in Lab 05, we have a struct for a data item storing the key and its data. In this simple case the key and data are both integers. In a more realistic application the key might be alpha numeric, in which case we would have to convert it to an integer somehow before passing it to our hash function $h(k)$, and how we do this conversion can be critical to the performance of insert and search operations. The data would typically be a \texttt{void*}, i.e. a void pointer. In other words, a pointer to any type of data, such as another struct. This would allow our implementation of the hash table to be reused for different data types (like templates in C++ or generics in C\# or Java). Here, though, we will stick with ints for simplicity.
 
-The second struct, \texttt{OAHashTable}, encapsulates our hash table (an array of DataItems to be allocated dynamically on the heap) along with other useful data about the table, such as its size, and some other variables to store performance metrics. Finally, the header file contains the function prototypes for our API. Note that we pass a pointer to the OAHashTable that we wish to operate on in as parameters to all of these functions (except for the initialisation function). You have seen this before with the other APIs that you have developed. 
+The second struct, \texttt{OAHashTable}, encapsulates our hash table (an array of \texttt{DataItems} to be allocated dynamically on the heap) along with other useful data about the table, such as its size, and some other variables to store performance metrics. Finally, the header file contains the function prototypes for our API. Note that we pass a pointer to the OAHashTable that we wish to operate on in as parameters to all of these functions (except for the initialisation function). You have seen this before with the other APIs that you have developed. 
 
 The implementation of the functions goes in a separate .c file, called \texttt{OAHashTable.c}. This separates out the \emph{specification} of the API, which goes in the header file and which is shared with users in plain text, from the \emph{implementation} whose details are irrelevant to users of the API (and which would typically be distributed as a pre-compiled library file).
 
@@ -331,7 +331,7 @@ Write a main method (in a file called \texttt{main.c}) to initialise a hash tabl
 
 6, 2, 13, 5, 17, 39, 1, 12
 
-After inserting the elements, , print the contents of the array to the screen. It should look like this: [-, 1, 2, 13, 12, 5, 6, 17, 39, -, -], where Ð marks an empty bucket in the array.
+After inserting the elements, , print the contents of the array to the screen. It should look like this: [-, 1, 2, 13, 12, 5, 6, 17, 39, -, -], where $-$ marks an empty bucket in the array. Search for the elements 6 and 39, which are in the table, and 100, which is not.
  
 Notice the phenomenon of \emph{primary clustering}. As collisions start to occur, we get long chains of numbers out of their position, which results in increased time to insert and retrieve items. This is a problem with linear probing.
 
